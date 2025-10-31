@@ -1,0 +1,27 @@
+version: '3.8'
+
+
+services:
+  # pulsar
+  pulsar:
+    image: apachepulsar/pulsar:4.0.7
+    container_name: pulsar-standalone
+    ports:
+      - "6650:6650"   # Pulsar client port (pulsar://)
+      - "8080:8080"   # Admin HTTP API (http://)
+    environment:
+      - PULSAR_PREFIX_brokerDeleteInactiveTopicsEnabled=false
+      - PULSAR_PREFIX_brokerDeleteInactiveTopicsFrequencySeconds=600
+    volumes:
+      - pulsar_data:/pulsar/data
+      - pulsar_logs:/pulsar/logs
+    command: >
+      /bin/bash -c
+      "bin/pulsar standalone --no-functions-worker --no-stream-storage"
+    restart: unless-stopped
+
+volumes:
+  pulsar_data:
+  pulsar_logs:
+
+

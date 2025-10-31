@@ -1,0 +1,29 @@
+server:
+  port: 9000
+
+spring:
+  kafka:
+    listener:
+      # 手动提交
+      # RECORD: 每处理一条记录后立即提交偏移量
+      # BATCH: 处理完上一批次的所有记录后提交偏移量
+      # TIME: 达到设定的ackTime时间后提交偏移量
+      # COUNT: 处理记录数量达到ackCount后提交偏移量
+      # COUNT_TIME: 数量或时间任一条件满足时提交偏移量
+      # MANUAL: 需要手动确认，所有记录处理完成后提交偏移量
+      # MANUAL_IMMEDIATE: 手动确认，如果在消费者线程中确认则立即提交
+      ack-mode: manual
+      type: batch # 批量处理
+    bootstrap-servers: localhost:9092 # kafka server
+    producer: #  序列化
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all # 确保消息被写入
+    consumer:
+      group-id: kafka-consumer-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest  # 自动偏移量
+      enable-auto-commit: false  # 自动提交
+      # 设置批量处理相关配置
+      max-poll-records: 3  # 每次拉取最多10条记录

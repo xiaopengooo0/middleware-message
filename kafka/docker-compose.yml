@@ -1,0 +1,11 @@
+version: '3.8'
+
+
+services:
+  # RabbitMQ
+  kafka:
+    image: apache/kafka:3.9.0
+    ports:
+      - "9092:9092"
+
+

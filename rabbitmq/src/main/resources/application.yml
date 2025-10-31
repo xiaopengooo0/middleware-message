@@ -1,0 +1,21 @@
+server:
+  port: 9001
+
+# application.yml
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: rabbit
+    password: message
+    virtual-host: /
+    # 生产者配置
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    # 消费者配置
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 10
+    # 添加连接相关配置
+    connection-timeout: 60000

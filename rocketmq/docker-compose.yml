@@ -1,0 +1,37 @@
+version: '3.8'
+
+
+services:
+  # NameServer：RocketMQ 的注册中心
+  namesrv:
+    image: apache/rocketmq:5.3.3
+    container_name: rocketmq-namesrv
+    ports:
+      - "9876:9876"
+    command: sh mqnamesrv
+    networks:
+      - rocketmq-net
+
+  # Broker：消息服务器（主节点）
+  broker:
+    image: apache/rocketmq:5.3.3
+    container_name: rocketmq-broker
+    ports:
+      - "10911:10911"   # broker 主端口
+    environment:
+      - JAVA_OPT_EXT=-server -Xms1g -Xmx1g -Xmn512m
+    volumes:
+      - ./broker.conf:/home/rocketmq/rocketmq-5.3.3conf/broker.conf
+    depends_on:
+      - namesrv
+    command: >
+      sh mqbroker
+      -n namesrv:9876
+      -c /home/rocketmq/rocketmq-5.3.3/conf/broker.conf
+    networks:
+      - rocketmq-net
+
+networks:
+  rocketmq-net:
+    driver: bridge
+
